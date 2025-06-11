@@ -1,0 +1,44 @@
+# EDA on Titanic train.csv
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+# Load data
+df = pd.read_csv('train.csv')
+print(df.head())
+print(df.info())
+print(df.describe(include='all'))
+
+# Univariate plots: histograms for numeric columns
+num_cols = ['Age','Fare']
+for col in num_cols:
+    plt.figure(figsize=(6,4))
+    sns.histplot(df[col].dropna(), kde=True)
+    plt.title('Distribution of ' + col)
+    plt.show()
+
+# Boxplots for numeric vs survived
+for col in num_cols:
+    plt.figure(figsize=(6,4))
+    sns.boxplot(x='Survived', y=col, data=df)
+    plt.title(col + ' vs Survived')
+    plt.show()
+
+# Categorical counts
+cat_cols = ['Sex','Pclass','Embarked']
+for col in cat_cols:
+    plt.figure(figsize=(6,4))
+    sns.countplot(x=col, hue='Survived', data=df)
+    plt.title('Survival count by ' + col)
+    plt.show()
+
+# Pairplot selected
+sns.pairplot(df[['Survived','Age','Fare','Pclass','Sex']].dropna(), hue='Survived', vars=['Age','Fare'])
+plt.show()
+
+# Correlation heatmap
+plt.figure(figsize=(6,4))
+cor = df[['Survived','Pclass','Age','SibSp','Parch','Fare']].corr()
+sns.heatmap(cor, annot=True, cmap='coolwarm')
+plt.title('Correlation Heatmap')
+plt.show()
